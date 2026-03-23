@@ -103,7 +103,7 @@ export default function App() {
     setActiveTab('gauge');
 
     try {
-      const res = await axios.post(`${API_BASE}/api/score`, { accountId: accountId.trim() });
+      const res = await axios.post(`${API_BASE}/api/score`, { accountId: accountId.trim() }, { timeout: 60000 });
       setResult(res.data);
       setAgentLog(res.data.agentLog || []);
     } catch (err) {

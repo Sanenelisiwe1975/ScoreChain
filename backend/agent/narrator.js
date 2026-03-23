@@ -50,7 +50,9 @@ Keep it under 200 words. Be factual and specific.`;
     messages: [{ role: 'user', content: prompt }],
   });
 
-  return message.content[0].text;
+  const text = message.content?.[0]?.text;
+  if (!text) throw new Error('Invalid response from Claude API');
+  return text;
 }
 
 module.exports = { generateNarrative };

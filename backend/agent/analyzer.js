@@ -50,14 +50,6 @@ async function getTokenBalances(accountId) {
 }
 
 /**
- * Fetches HBAR balance history via account balance endpoint
- */
-async function getBalanceHistory(accountId) {
-  const res = await axios.get(`${BASE_URL}/balances?account.id=${accountId}`);
-  return res.data.balances || [];
-}
-
-/**
  * Computes the account age in months from the account creation timestamp
  */
 function computeAccountAgeMonths(accountInfo) {
@@ -134,7 +126,12 @@ async function analyzeWallet(accountId) {
 
   // 2. Transactions
   log('Querying transaction history (up to 1000 records)...');
-  const transactions = await getTransactions(accountId, 1000);
+  let transactions = [];
+  try {
+    transactions = await getTransactions(accountId, 1000);
+  } catch (err) {
+    log(`Warning: Could not fetch transactions (${err.message}) — scoring with 0 transactions`);
+  }
   log(`Retrieved ${transactions.length} transactions`);
 
   // 3. Consistency
@@ -153,7 +150,12 @@ async function analyzeWallet(accountId) {
 
   // 5. Token diversity
   log('Fetching HTS token holdings...');
-  const tokens = await getTokenBalances(accountId);
+  let tokens = [];
+  try {
+    tokens = await getTokenBalances(accountId);
+  } catch (err) {
+    log(`Warning: Could not fetch token balances (${err.message}) — scoring with 0 tokens`);
+  }
   log(`Holds ${tokens.length} different HTS token(s)`);
 
   // 6. Balance
