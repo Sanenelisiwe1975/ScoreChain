@@ -52,18 +52,10 @@ async function createNFTCollection() {
  * Stores score, date, and HCS reference as JSON.
  */
 function buildMetadata(scoreReport, hcsProof) {
-  const meta = {
-    name: `ScoreChain Score — ${scoreReport.accountId}`,
-    description: `DeFi Credit Score for Hedera wallet ${scoreReport.accountId}`,
-    creditScore: scoreReport.creditScore,
-    rating: scoreReport.rating,
-    issuedAt: scoreReport.calculatedAt,
-    hcsTopic: hcsProof.topicId,
-    hcsSequence: hcsProof.sequenceNumber,
-    hcsVerifyUrl: hcsProof.hashscanUrl,
-    loanOffer: scoreReport.loanOffer,
-  };
-  return Buffer.from(JSON.stringify(meta));
+  // HTS limits metadata to 100 bytes — store a compact reference only.
+  // Full score data is in the HCS message referenced by topic + sequence.
+  const meta = `SC:${scoreReport.creditScore}:${hcsProof.topicId}:${hcsProof.sequenceNumber}`;
+  return Buffer.from(meta);
 }
 
 /**

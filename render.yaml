@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: scorechain-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: HEDERA_ACCOUNT_ID
+        sync: false
+      - key: HEDERA_PRIVATE_KEY
+        sync: false
+      - key: HEDERA_NETWORK
+        value: testnet
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: HCS_TOPIC_ID
+        sync: false
+      - key: HTS_TOKEN_ID
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: PORT
+        value: 3001

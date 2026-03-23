@@ -1,0 +1,14 @@
+{
+  "name": "scorechain",
+  "version": "1.0.0",
+  "description": "ScoreChain — DeFi Credit Scoring Agent on Hedera",
+  "scripts": {
+    "dev": "concurrently --names \"backend,frontend\" --prefix-colors \"cyan,magenta\" \"npm run dev --prefix backend\" \"npm start --prefix frontend\"",
+    "build": "npm run build --prefix frontend",
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "start": "npm start --prefix backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
