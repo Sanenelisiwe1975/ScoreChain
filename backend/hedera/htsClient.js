@@ -12,10 +12,9 @@ const {
   TokenSupplyType,
   TokenMintTransaction,
   AccountId,
-  PrivateKey,
 } = require('@hashgraph/sdk');
 
-const { getClient } = require('./hcsClient');
+const { getClient, parsePrivateKey } = require('./hcsClient');
 
 /**
  * Creates the ScoreChain NFT collection on HTS.
@@ -24,7 +23,7 @@ const { getClient } = require('./hcsClient');
 async function createNFTCollection() {
   const client = getClient();
   const operatorId = AccountId.fromString(process.env.HEDERA_ACCOUNT_ID);
-  const operatorKey = PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY);
+  const operatorKey = parsePrivateKey(process.env.HEDERA_PRIVATE_KEY);
 
   const transaction = await new TokenCreateTransaction()
     .setTokenName('ScoreChain Credit Score')
@@ -73,7 +72,7 @@ function buildMetadata(scoreReport, hcsProof) {
  */
 async function mintCreditScoreNFT(tokenId, scoreReport, hcsProof) {
   const client = getClient();
-  const operatorKey = PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY);
+  const operatorKey = parsePrivateKey(process.env.HEDERA_PRIVATE_KEY);
 
   const metadata = buildMetadata(scoreReport, hcsProof);
 

@@ -15,11 +15,23 @@ const {
 
 let hederaClient = null;
 
+/**
+ * Parses a private key string, handling both ECDSA (0x-prefixed or 64-char hex)
+ * and ED25519 (DER-encoded) formats automatically.
+ */
+function parsePrivateKey(keyStr) {
+  const stripped = keyStr.startsWith('0x') ? keyStr.slice(2) : keyStr;
+  if (/^[0-9a-fA-F]{64}$/.test(stripped)) {
+    return PrivateKey.fromStringECDSA(stripped);
+  }
+  return PrivateKey.fromStringED25519(keyStr);
+}
+
 function getClient() {
   if (hederaClient) return hederaClient;
 
   const accountId = AccountId.fromString(process.env.HEDERA_ACCOUNT_ID);
-  const privateKey = PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY);
+  const privateKey = parsePrivateKey(process.env.HEDERA_PRIVATE_KEY);
 
   const network = process.env.HEDERA_NETWORK || 'testnet';
   hederaClient =
@@ -94,4 +106,4 @@ async function submitScoreMessage(topicId, scoreReport) {
   };
 }
 
-module.exports = { createTopic, submitScoreMessage, getClient };
+module.exports = { createTopic, submitScoreMessage, getClient, parsePrivateKey };
